@@ -24,18 +24,17 @@ Do todos os comandos...
 #include "defines.h"
 #include "utils.h"
 //#include "architecture_opengl.c"
-//#include "simulator_curses.c"
+#include "simulator_curses.h"
 
-unsigned int MEMORY[TAMANHO_MEMORIA]; // Vetor que representa a Memoria de programa e de dados do Processador
-int PC=0, SP=0;
+// Vetor que representa a Memoria de programa e de dados do Processador
+unsigned int MEMORY[TAMANHO_MEMORIA];
 
 typedef struct _resultadoUla{
 	unsigned int result;
 	unsigned int auxFR;
 } ResultadoUla;
 
-
-//  Processa dados do Arquivo CPU.MIF
+//  Processa dados do Arquivo MIF
 void le_arquivo(void);
 
 //processa uma linha completa e retorna o número codificado
@@ -52,33 +51,6 @@ unsigned int _rotr(const unsigned int value, int shift);
 
 // ULA
 ResultadoUla ULA(unsigned int x, unsigned int y, unsigned int OP, int carry);
-
-//int kbhit(void)
-//{
-//  struct termios oldt, newt;
-//  int ch;
-//  int oldf;
-// 
-//  tcgetattr(STDIN_FILENO, &oldt);
-//  newt = oldt;
-//  newt.c_lflag &= ~(ICANON | ECHO);
-//  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-//  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-//  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-// 
-//  ch = getchar();
-// 
-//  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-//  fcntl(STDIN_FILENO, F_SETFL, oldf);
-// 
-//  if(ch != EOF)
-//  {
-//    ungetc(ch, stdin);
-//    return 1;
-//  }
-// 
-//  return 0;
-//}
 
 int FR[16] = {0};  // Flag Register: <...|Negativo|StackUnderflow|StackOverflow|DivByZero|ArithmeticOverflow|carry|zero|equal|lesser|greater>
 int reg[8]; // 8 registradores
@@ -101,11 +73,9 @@ int main()
 	int TECLADO;
 	char c;
 	int cor;
+	int PC = 0, SP = 0;
 	ResultadoUla resultadoUla;
-	PC = 0;
-	SP = 0;
 	le_arquivo();
-	getchar();
 	//openGL_create_window();
 	curses_create_window();
 
@@ -117,8 +87,14 @@ inicio:
 	// Loop principal do processador: Nunca para!!
 loop:
 	//openGL_update();
-	getchar();
-	curses_update();
+	timeout(99999);
+	getch();
+	timeout(0);
+
+	estado_da_maquina_curses estado_curses = {
+		MEMORY, reg, 10, SP
+	};
+	curses_update(estado_curses);
 
 	// Executa Load dos Registradores
 	if(LoadIR) IR = DATA_OUT;
@@ -229,14 +205,9 @@ loop:
 					// TODO: entrada teclado
 					timeout(99999);
 					TECLADO = getch();
-					//if(TECLADO == ERR)
-					//	TECLADO = 255;
+					if(TECLADO == ERR)
+						TECLADO = 255;
 					timeout(0);
-
-					//if(kbhit())
-					//	TECLADO = getch();
-					//else
-					//	TECLADO = 255;
 
 					TECLADO = getch();
 
@@ -258,7 +229,7 @@ loop:
 					else if(cor == 15)
 						cor = 0;
 
-					curses_out_char(c, reg[ry], cor);
+					//curses_out_char(c, reg[ry], cor);
 					// -----------------------------
 					state=STATE_FETCH;
 					break;
@@ -676,7 +647,7 @@ loop:
 fim:
 	//openGL_destroy_window();
 	getchar();   
-	curses_destroy_window();
+	//curses_destroy_window();
 	return 0;
 }
 
@@ -686,7 +657,7 @@ void le_arquivo(void){
 	int i, j;
 	int processando = 0; // Flag para varreo o arquivo CPURAM.mif e tirar o cabecalho
 
-	if ( (stream = fopen("Nave11.mif","r")) == NULL)  // Abre o arquivo para leitura
+	if ( (stream = fopen("Nave11-fast.mif","r")) == NULL)  // Abre o arquivo para leitura
 	{
 		printf("[Simple Simulator] Nao conseguiu abrir o arquivo!\n");
 		exit(1);

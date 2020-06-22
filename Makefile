@@ -1,7 +1,5 @@
-# Flag de debug
-FLAGS = -g 
 # Flags do OpenGL
-FLAGS += -lGL -lGLU -lglfw -lGLEW 
+FLAGS = -lGL -lGLU -lglfw -lGLEW 
 # Flags do Curses
 FLAGS += -lcurses
 # Flags de otimização
