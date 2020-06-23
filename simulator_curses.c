@@ -186,9 +186,9 @@ void curses_setup()
 void curses_update(estado_da_maquina_curses estado)
 {
 	// TODO Os valores no estado nao estao chegando (parece q ta tudo zerado)
-	mvwprintw(codeWindow, 1, 0, "%d ", estado.PC);
 	curses_draw_top_bar_window(estado);
 	curses_draw_code_window(estado);
+	wrefresh(codeWindow);
 }
 
 void curses_init_top_bar_window() 
@@ -296,7 +296,6 @@ void curses_out_char(char c, int pos, int cor)
 	wattr_on(outWindow, COLOR_PAIR(cor), NULL);
 	mvwprintw(outWindow, posY, posX, "%c", c);
 	wattr_off(outWindow, COLOR_PAIR(cor), NULL);
-
 	wrefresh(outWindow);
 
 	//wattr_on(outWindow, COLOR_PAIR(0), NULL);
@@ -343,7 +342,7 @@ void curses_draw_code_window(estado_da_maquina_curses estado)
 		int curr_inst = pega_pedaco(estado.memoria[estado.PC], 15, 10); 
 		if(curr_inst == STORE || curr_inst == LOAD || curr_inst == LOADIMED || curr_inst == JMP || curr_inst == CALL)
 			temp = 2;
-		//show_program(codeWindow, y, estado);
+		show_program(codeWindow, y, estado);
 		estado.PC+=temp;
 	}
 	wattr_off(codeWindow, COLOR_PAIR(PAIR_CODE), NULL);

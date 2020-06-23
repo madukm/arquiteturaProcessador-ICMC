@@ -91,9 +91,11 @@ loop:
 	getch();
 	timeout(0);
 
-	estado_da_maquina_curses estado_curses = {
-		MEMORY, reg, 10, SP
-	};
+	estado_da_maquina_curses estado_curses;
+	estado_curses.memoria = &MEMORY;
+	estado_curses.reg = &reg;
+	estado_curses.PC = PC;
+	estado_curses.SP = SP;
 	curses_update(estado_curses);
 
 	// Executa Load dos Registradores
