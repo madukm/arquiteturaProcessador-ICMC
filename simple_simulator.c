@@ -90,10 +90,12 @@ loop:
 	timeout(99999);
 	getch();
 	timeout(0);
-
-	estado_da_maquina_curses estado_curses;
-	estado_curses.memoria = &MEMORY;
-	estado_curses.reg = &reg;
+	
+	estado_da_maquina_curses estado_curses = {0};
+	memcpy(estado_curses.memoria, MEMORY, sizeof(MEMORY));
+	memcpy(estado_curses.reg, reg, sizeof(reg));
+	//estado_curses.memoria = &MEMORY;
+	//estado_curses.reg = &reg;
 	estado_curses.PC = PC;
 	estado_curses.SP = SP;
 	curses_update(estado_curses);
@@ -478,7 +480,7 @@ loop:
 					state=STATE_EXECUTE;
 					break;
 
-				case RTS:
+				case RTS: 
 					// SP++;
 					IncSP = 1;
 					// -----------------------------
@@ -576,8 +578,7 @@ loop:
 			//state=STATE_EXECUTE2;
 			break;
 
-		case STATE_EXECUTE2:
-
+		case STATE_EXECUTE2: 
 			//case RTS:
 			//PC++;
 			IncPC = 1;
@@ -694,7 +695,8 @@ void le_arquivo(void){
 				printf("Linha invalida (%d): '%s'", j, linha);
 			}
 			else {
-				//printf("Valor: %d. Linha: %s\n", MEMORY[j], linha);
+				if(j<500)
+					printf("Valor: %d. Linha: %s\n", MEMORY[j], linha);
 			}
 			j++;
 		}

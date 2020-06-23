@@ -12,8 +12,8 @@
 
 // Struct para receber o estado atual da maquina
 typedef struct _estado_da_maquina_curses{
-	unsigned int **memoria;
-	int **reg;
+	unsigned int memoria[TAMANHO_MEMORIA];
+	int reg[8];
 	int PC;
 	int SP;
 } estado_da_maquina_curses;

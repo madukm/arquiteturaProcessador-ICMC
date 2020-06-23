@@ -337,7 +337,7 @@ void curses_draw_code_window(estado_da_maquina_curses estado)
 	getmaxyx(codeWindow, maxY, maxX);
 	
 	wattr_on(codeWindow, COLOR_PAIR(PAIR_CODE), NULL); 
-	for(int y=1; y<maxY; y++){
+	for(int y=0; y<maxY; y++){
 		int temp = 1;
 		int curr_inst = pega_pedaco(estado.memoria[estado.PC], 15, 10); 
 		if(curr_inst == STORE || curr_inst == LOAD || curr_inst == LOADIMED || curr_inst == JMP || curr_inst == CALL)
@@ -356,6 +356,8 @@ void show_program(WINDOW* codeWindow,int y, estado_da_maquina_curses estado)
 	// Evita que o pc aponte para um lugar que nao esta na memoria
 	int pc = estado.PC;
 	int SP = estado.SP;
+
+
 	if(pc >= TAMANHO_MEMORIA) return;
 	int rx = pega_pedaco(estado.memoria[pc],9,7);
     int ry = pega_pedaco(estado.memoria[pc],6,4);
