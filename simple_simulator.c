@@ -58,6 +58,7 @@ int selM1=0, selM2=0, selM3=0, selM4=0, selM5=0, selM6=0;
 int LoadPC=0, IncPC=0, LoadIR=0, LoadSP=0, IncSP=0, DecSP=0, LoadMAR=0, LoadFR=0;
 int LoadReg[8] = {0};
 int RW=0;
+int Video=0;
 
 int main()
 {
@@ -76,7 +77,7 @@ int main()
 	int PC = 0, SP = 0;
 	ResultadoUla resultadoUla;
 	le_arquivo();
-	//openGL_create_window();
+	openGL_create_window();
 	curses_create_window();
 
 inicio:
@@ -86,8 +87,8 @@ inicio:
 
 	// Loop principal do processador: Nunca para!!
 loop:
-	//openGL_update();
-	timeout(99999);
+	openGL_update();
+	timeout(999999);
 	getch();
 	timeout(0);
 	
@@ -98,6 +99,7 @@ loop:
 	//estado_curses.reg = &reg;
 	estado_curses.PC = PC;
 	estado_curses.SP = SP;
+	estado_curses.state = state;
 	curses_update(estado_curses);
 
 	// Executa Load dos Registradores
@@ -146,6 +148,7 @@ loop:
 	IncSP   = 0;
 	DecSP   = 0;
 	LoadFR  = 0;
+	Video   = 0;
 
 
 	// Maquina de Controle
@@ -181,6 +184,7 @@ loop:
 			selM4   = 0;  // Pode por direto o nr. do Regisrador
 			selM5   = sM3;
 			selM6   = sULA;
+			Video   = 0;
 
 			// -----------------------------
 			state=STATE_FETCH;
@@ -225,6 +229,9 @@ loop:
 
 				case OUTCHAR:
 					//printf("%c", reg[rx]);
+					selM3 = 1;
+					selM4 = 0;
+					Video = 1;
 					c = pega_pedaco(reg[rx], 7, 0);
 					cor = pega_pedaco(reg[rx], 15, 8);
 
@@ -233,7 +240,7 @@ loop:
 					else if(cor == 15)
 						cor = 0;
 
-					//curses_out_char(c, reg[ry], cor);
+					curses_out_char(c, reg[ry], cor);
 					// -----------------------------
 					state=STATE_FETCH;
 					break;

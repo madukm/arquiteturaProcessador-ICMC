@@ -16,6 +16,7 @@ typedef struct _estado_da_maquina_curses{
 	int reg[8];
 	int PC;
 	int SP;
+	int state;
 } estado_da_maquina_curses;
 
 // Inicializa o curses e cria as janelas

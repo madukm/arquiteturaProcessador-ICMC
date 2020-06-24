@@ -74,7 +74,7 @@ void curses_create_window()
 	// Cria janela topBar
 	topBar = newwin(3, maxX, 0, 0);
 	//Cria janela de código
-	codeWindow = newwin(maxY-3, 60, 3, 0);
+	codeWindow = newwin(maxY-3, 70, 3, 0);
 	// Cria janela de outchar
 	outWindow = newwin(WINDOW_HEIGHT+1, WINDOW_WIDTH, 3, maxX-WINDOW_WIDTH);
 
@@ -311,6 +311,19 @@ void curses_init_code_window()
 	// Recebe tamanho da tela
 	getmaxyx(codeWindow, maxY, maxX);
 
+	// Background code
+	wattr_on(codeWindow, COLOR_PAIR(PAIR_CODE), NULL);
+	for(int j=1; j<maxY; j++)
+	{
+		for(int i=0; i<maxX; i++)
+		{
+			wmove(codeWindow, j, i);
+			wprintw(codeWindow, " ");
+		}
+	}
+	mvwprintw(codeWindow, 2, 0, "----------------------------------------------------------------------");
+	wattr_off(codeWindow, COLOR_PAIR(PAIR_CODE), NULL);
+
 	// Background do titulo
 	wattr_on(codeWindow, COLOR_PAIR(PAIR_TITLES), NULL);
 	for(int i=0; i<maxX; i++)
@@ -337,7 +350,30 @@ void curses_draw_code_window(estado_da_maquina_curses estado)
 	getmaxyx(codeWindow, maxY, maxX);
 	
 	wattr_on(codeWindow, COLOR_PAIR(PAIR_CODE), NULL); 
-	for(int y=0; y<maxY; y++){
+
+	switch(estado.state)
+	{
+		case STATE_RESET:
+			mvwprintw(codeWindow, 1, 0, "state: STATE_RESET          ");
+			break;
+		case STATE_FETCH:
+			mvwprintw(codeWindow, 1, 0, "state: STATE_FETCH          ");
+			break;
+		case STATE_DECODE:
+			mvwprintw(codeWindow, 1, 0, "state: STATE_DECODE          ");
+			break;
+		case STATE_EXECUTE:
+			mvwprintw(codeWindow, 1, 0, "state: STATE_EXECUTE          ");
+			break;
+		case STATE_EXECUTE2:
+			mvwprintw(codeWindow, 1, 0, "state: STATE_EXECUTE2          ");
+			break;
+		case STATE_HALTED:
+			mvwprintw(codeWindow, 1, 0, "state: STATE_HALTED          ");
+			break;
+	}
+
+	for(int y=3; y<maxY; y++){
 		int temp = 1;
 		int curr_inst = pega_pedaco(estado.memoria[estado.PC], 15, 10); 
 		if(curr_inst == STORE || curr_inst == LOAD || curr_inst == LOADIMED || curr_inst == JMP || curr_inst == CALL)
