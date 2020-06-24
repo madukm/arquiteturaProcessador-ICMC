@@ -11,7 +11,7 @@ Vídeo do simulador funcionando: https://youtu.be/eYd-wCxaJ6Q
 
 <p align="center">
 <img src="./img/curses.png" height="500">
-<img src=".img/openGL.png" height="500">
+<img src="./img/openGL.png" height="500">
 </p>
 
 Atualmente a visualização está funcionando como descrito, porém, a velocidade do simulador ainda precisa ser melhorada, visto que a execução dos jogos está bem mais lenta do que o encontrado na FPGA e no atual simulador da disciplina. Acreditamos que isto está relacionado com a taxa de atualização da janela do OpenGL e do curses. Outro ponto a ser melhorado é a apresentação da arquitetura, que está $hardcoded$, o ideal seria que esta fosse variável de acordo com o código do simulador, de forma a permitir analisar outras arquiteturas construídas pelos alunos.
