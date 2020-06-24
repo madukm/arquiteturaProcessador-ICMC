@@ -10,3 +10,9 @@ Desenvolvemos um simulador do processador que executa o código os códigos mont
 Vídeo do simulador funcionando: https://youtu.be/eYd-wCxaJ6Q
 
 Agradecimentos ao Professor Eduardo Simões https://github.com/simoesusp
+
+Desenvolvido por:
+
+Breno Cunha Queiroz https://github.com/Brenocq
+
+Maria Eduarda Kawakami Moreira
