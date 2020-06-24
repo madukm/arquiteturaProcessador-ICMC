@@ -1,3 +1,9 @@
+//---------------------------------------------------
+// Architecture OpenGL
+// By: Breno Cunha Queiroz and Maria Eduarda Kawakami
+// Date: 11/06/20
+//---------------------------------------------------
+
 #include "architecture_opengl.h"
 #include <math.h>
 

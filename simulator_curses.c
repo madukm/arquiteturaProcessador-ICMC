@@ -1,3 +1,8 @@
+//---------------------------------------------------
+// Simulator Curses
+// By: Breno Cunha Queiroz and Maria Eduarda Kawakami
+// Date: 19/06/20
+//---------------------------------------------------
 #include "simulator_curses.h"
 #include "utils.h"
 
@@ -73,7 +78,7 @@ void curses_create_window()
 
 	// Cria janela topBar
 	topBar = newwin(3, maxX, 0, 0);
-	//Cria janela de código
+	// Cria janela de código
 	codeWindow = newwin(maxY-3, 70, 3, 0);
 	// Cria janela de outchar
 	outWindow = newwin(WINDOW_HEIGHT+1, WINDOW_WIDTH, 3, maxX-WINDOW_WIDTH);
@@ -139,7 +144,7 @@ void curses_setup()
 	init_color(SIM_COLOR_CINZA, 1000, 1000, 1000);
 	init_color(SIM_COLOR_VERMELHO, 1000, 0, 0);
 	init_color(SIM_COLOR_LIMA, 1000, 1000, 1000);
-	init_color(SIM_COLOR_AMARELO, 1000, 1000, 1000);
+	init_color(SIM_COLOR_AMARELO, 1000, 1000, 0);
 	init_color(SIM_COLOR_AZUL, 0, 0, 1000);
 	init_color(SIM_COLOR_ROSA, 1000, 1000, 1000);
 	init_color(SIM_COLOR_AQUA, 1000, 1000, 1000);
@@ -185,7 +190,6 @@ void curses_setup()
 
 void curses_update(estado_da_maquina_curses estado)
 {
-	// TODO Os valores no estado nao estao chegando (parece q ta tudo zerado)
 	curses_draw_top_bar_window(estado);
 	curses_draw_code_window(estado);
 	wrefresh(codeWindow);
@@ -297,11 +301,6 @@ void curses_out_char(char c, int pos, int cor)
 	mvwprintw(outWindow, posY, posX, "%c", c);
 	wattr_off(outWindow, COLOR_PAIR(cor), NULL);
 	wrefresh(outWindow);
-
-	//wattr_on(outWindow, COLOR_PAIR(0), NULL);
-	//mvprintw(posY+30, posX, "%c", c);
-	//wattr_off(outWindow, COLOR_PAIR(0), NULL);
-	//wrefresh(stdscr);
 }
 
 
@@ -388,6 +387,7 @@ void curses_draw_code_window(estado_da_maquina_curses estado)
 
 void show_program(WINDOW* codeWindow,int y, estado_da_maquina_curses estado) 
 {
+	// Codigo retirado do simulador do Simoes
     int x = 0;
 	// Evita que o pc aponte para um lugar que nao esta na memoria
 	int pc = estado.PC;
@@ -576,7 +576,7 @@ void show_program(WINDOW* codeWindow,int y, estado_da_maquina_curses estado)
                 }
             break;
 
-        case SHIFT:     // Nao tive paciencia de fazer diferente para cada SHIFT/ROT
+        case SHIFT:
             if(pega_pedaco(ir,6,4)==0) // SHIFT LEFT 0
                 mvwprintw(codeWindow,y,x, "PC: %05d  |  SHIFTL0 R%d, #%02d      |   R%d <-'0'  << %d ", pc, rx, pega_pedaco(ir,3,0), rx, pega_pedaco(ir,3,0));
             if(pega_pedaco(ir,6,4)==1) // SHIFT LEFT 1

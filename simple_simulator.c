@@ -1,25 +1,13 @@
-// gcc simple_simulator.c -O3 -march=native -o simulador -Wall -lm -lcurses
-// -lm is option to execute math.h library file.
-/*
-Perguntas:
-1) O que tenho que fazer?
-2) Onde começa?
-3) Onde Termina?
-4) Qual é o caminho?
-Do todos os comandos...
-5) Acabou??
-6) E o PC ????????
-*/
-#include <curses.h>     //  Novo Terminal cheio de funcoes!!!
+//-----------------------------------------------------------------------
+// Simple Simulator
+// By: Breno Cunha Queiroz and Maria Eduarda Kawakami and Eduardo Simoes
+// Date: 11/06/20
+//-----------------------------------------------------------------------
+#include <curses.h>
 #include <stdlib.h>     // Rand
 #include <stdio.h>      // Printf
 #include <fcntl.h>      // Fileopen - Fileclose - fprintf - fscanf
 #include <math.h>
-
-// kbhit() TODO: deletar
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
 
 #include "defines.h"
 #include "utils.h"
@@ -34,10 +22,10 @@ typedef struct _resultadoUla{
 	unsigned int auxFR;
 } ResultadoUla;
 
-//  Processa dados do Arquivo MIF
+// Processa dados do Arquivo MIF
 void le_arquivo(void);
 
-//processa uma linha completa e retorna o número codificado
+// Processa uma linha completa e retorna o número codificado
 int processa_linha(char* linha); 
 
 // Funcao que separa somente o pedaco de interesse do IR;
@@ -81,15 +69,24 @@ int main()
 	curses_create_window();
 
 inicio:
-	//printf("Rodando...\n");
-
 	state = STATE_RESET;
 
 	// Loop principal do processador: Nunca para!!
+	int runFast = 1;
 loop:
-	openGL_update();
-	timeout(999999);
-	getch();
+	if(runFast)
+		timeout(0);
+	else
+	{
+
+		timeout(999999);
+		openGL_update();
+	}
+
+	if(getch()!=ERR)
+	{
+		runFast = 0;
+	}
 	timeout(0);
 	
 	estado_da_maquina_curses estado_curses = {0};

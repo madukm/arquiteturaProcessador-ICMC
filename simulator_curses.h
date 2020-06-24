@@ -1,3 +1,8 @@
+//---------------------------------------------------
+// Simulator Curses
+// By: Breno Cunha Queiroz and Maria Eduarda Kawakami
+// Date: 19/06/20
+//---------------------------------------------------
 #ifndef SIMULATOR_CURSES_H
 #define SIMULATOR_CURSES_H
 
