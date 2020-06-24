@@ -14,5 +14,7 @@ Atualmente a visualização está funcionando como descrito, porém, a velocidad
 Agradecimentos ao Professor Eduardo Simões <3 https://github.com/simoesusp
 
 Desenvolvido por:
+
 Breno Cunha Queiroz https://github.com/Brenocq
+
 Maria Eduarda Kawakami Moreira
