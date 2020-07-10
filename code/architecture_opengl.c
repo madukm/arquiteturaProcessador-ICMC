@@ -6,7 +6,6 @@
 
 #include "architecture_opengl.h"
 #include <math.h>
-#include <time.h>
 
 GLFWwindow* window;
 
@@ -82,37 +81,29 @@ void openGL_destroy_window()
 
 void openGL_update()
 {
-	static clock_t lastUpdate = 0;
-	clock_t elapsed = clock() - lastUpdate;
+	// Esta funcao atualiza o desenho na tela e checa se a janela foi fechada
 
-	double time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
-	if(time_elapsed>0.1)
+	if(!glfwWindowShouldClose(window))
 	{
-		lastUpdate = clock();
-		// Esta funcao atualiza o desenho na tela e checa se a janela foi fechada
+		// Recebe se a janela foi fechada
+		glfwPollEvents();
+		// Limpa a tela com branco
+		glClearColor(1.0, 1.0, 1.0, 1.0);
+		// Limpa os dados do buffer (imagem em que vai desenhar)
+		glClear(GL_COLOR_BUFFER_BIT);
 
-		if(!glfwWindowShouldClose(window))
-		{
-			// Recebe se a janela foi fechada
-			glfwPollEvents();
-			// Limpa a tela com branco
-			glClearColor(1.0, 1.0, 1.0, 1.0);
-			// Limpa os dados do buffer (imagem em que vai desenhar)
-			glClear(GL_COLOR_BUFFER_BIT);
+		// Desenha os componentes e trilhas na janela
+		openGL_draw();
 
-			// Desenha os componentes e trilhas na janela
-			openGL_draw();
-
-			// Atualiza o que esta mostrando na janela
-			// Troca a imagem que estava desenhando com a imagem que esta mostrando
-			glfwSwapBuffers(window);
-		}
-		else
-		{
-			// Termina o programa se a janela foi fechada
-			glfwTerminate();
-			exit(0);
-		}
+		// Atualiza o que esta mostrando na janela
+		// Troca a imagem que estava desenhando com a imagem que esta mostrando
+		glfwSwapBuffers(window);
+	}
+	else
+	{
+		// Termina o programa se a janela foi fechada
+    	glfwTerminate();
+		exit(0);
 	}
 }
 

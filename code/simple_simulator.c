@@ -72,8 +72,23 @@ inicio:
 	state = STATE_RESET;
 
 	// Loop principal do processador: Nunca para!!
+	int runFast = 1;
 loop:
-	openGL_update();
+	if(runFast)
+		timeout(0);
+	else
+	{
+
+		timeout(999999);
+		openGL_update();
+	}
+
+	if(getch()!=ERR)
+	{
+		runFast = 0;
+	}
+	timeout(0);
+	
 	estado_da_maquina_curses estado_curses = {0};
 	memcpy(estado_curses.memoria, MEMORY, sizeof(MEMORY));
 	memcpy(estado_curses.reg, reg, sizeof(reg));
@@ -186,16 +201,20 @@ loop:
 			break;
 
 		case STATE_DECODE:
+
 			// Case das instrucoes
 			opcode = pega_pedaco(IR,15,10);
 
 			switch(opcode){
 				case INCHAR:
-					//timeout(99999);
+					// TODO: entrada teclado
+					timeout(99999);
 					TECLADO = getch();
 					if(TECLADO == ERR)
 						TECLADO = 255;
-					//timeout(0);
+					timeout(0);
+
+					TECLADO = getch();
 
 					TECLADO = pega_pedaco(TECLADO,7,0);
 					selM2 = sTECLADO;
@@ -676,13 +695,13 @@ void le_arquivo(void){
 
 		if (processando && (j < TAMANHO_MEMORIA)) {
 			MEMORY[j] = processa_linha(linha);
-			//if (MEMORY[j] == -1) {
-			//	printf("Linha invalida (%d): '%s'", j, linha);
-			//}
-			//else {
-			//	if(j<500)
-			//		printf("Valor: %d. Linha: %s\n", MEMORY[j], linha);
-			//}
+			if (MEMORY[j] == -1) {
+				printf("Linha invalida (%d): '%s'", j, linha);
+			}
+			else {
+				if(j<500)
+					printf("Valor: %d. Linha: %s\n", MEMORY[j], linha);
+			}
 			j++;
 		}
 

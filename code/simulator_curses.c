@@ -5,7 +5,6 @@
 //---------------------------------------------------
 #include "simulator_curses.h"
 #include "utils.h"
-#include <time.h>
 
 //Curses colors
 #define WIN_COLOR_BLACK 16
@@ -191,17 +190,9 @@ void curses_setup()
 
 void curses_update(estado_da_maquina_curses estado)
 {
-	static clock_t lastUpdate = 0;
-	clock_t elapsed = clock() - lastUpdate;
-
-	double time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
-	if(time_elapsed>0.01)
-	{
-		lastUpdate = clock();
-		curses_draw_top_bar_window(estado);
-		curses_draw_code_window(estado);
-		wrefresh(codeWindow);
-	}
+	curses_draw_top_bar_window(estado);
+	curses_draw_code_window(estado);
+	wrefresh(codeWindow);
 }
 
 void curses_init_top_bar_window() 
@@ -306,13 +297,9 @@ void curses_out_char(char c, int pos, int cor)
 	int posX = pos%WINDOW_WIDTH;
 	int posY = pos/WINDOW_WIDTH+1;
 
-	//wattr_on(outWindow, COLOR_PAIR(cor), NULL);
-	//mvwprintw(outWindow, posY, posX, "%c", c);
-	//wattr_off(outWindow, COLOR_PAIR(cor), NULL);
-
-	wattr_on(outWindow, COLOR_PAIR(0), NULL);
+	wattr_on(outWindow, COLOR_PAIR(cor), NULL);
 	mvwprintw(outWindow, posY, posX, "%c", c);
-	wattr_off(outWindow, COLOR_PAIR(0), NULL);
+	wattr_off(outWindow, COLOR_PAIR(cor), NULL);
 	wrefresh(outWindow);
 }
 
