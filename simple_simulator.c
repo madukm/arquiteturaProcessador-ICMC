@@ -8,6 +8,7 @@
 #include <stdio.h>      // Printf
 #include <fcntl.h>      // Fileopen - Fileclose - fprintf - fscanf
 #include <math.h>
+#include <time.h>
 
 #include "defines.h"
 #include "utils.h"
@@ -48,6 +49,7 @@ int LoadReg[8] = {0};
 int RW=0;
 int Video=0;
 
+
 int main()
 {
 	int i=0;
@@ -63,26 +65,39 @@ int main()
 	char c;
 	int cor;
 	int PC = 0, SP = 0;
+	int passo_a_passo = 0;
 	ResultadoUla resultadoUla;
 	le_arquivo();
 	openGL_create_window();
 	curses_create_window();
 
+	clock_t clock_init = clock();
+	clock_t last_update = clock();
+	clock_t elapsed = 0;
+	double time_elapsed = 0;
 inicio:
 	state = STATE_RESET;
 
 	// Loop principal do processador: Nunca para!!
 loop:
-	openGL_update();
-	estado_da_maquina_curses estado_curses = {0};
-	memcpy(estado_curses.memoria, MEMORY, sizeof(MEMORY));
-	memcpy(estado_curses.reg, reg, sizeof(reg));
-	//estado_curses.memoria = &MEMORY;
-	//estado_curses.reg = &reg;
-	estado_curses.PC = PC;
-	estado_curses.SP = SP;
-	estado_curses.state = state;
-	curses_update(estado_curses);
+	if(passo_a_passo)
+	{
+		elapsed = clock() - last_update;
+		time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
+		if(time_elapsed > 0.1)
+		{
+			last_update = clock();
+
+			estado_da_maquina_curses estado_curses = {0};
+			memcpy(estado_curses.memoria, MEMORY, sizeof(MEMORY));
+			memcpy(estado_curses.reg, reg, sizeof(reg));
+			estado_curses.PC = PC;
+			estado_curses.SP = SP;
+			estado_curses.state = state;
+			curses_update(estado_curses);
+			openGL_update();
+		}
+	}
 
 	// Executa Load dos Registradores
 	if(LoadIR) IR = DATA_OUT;
@@ -212,11 +227,6 @@ loop:
 					Video = 1;
 					c = pega_pedaco(reg[rx], 7, 0);
 					cor = pega_pedaco(reg[rx], 15, 8);
-
-					if(cor == 0)
-						cor = 15;
-					else if(cor == 15)
-						cor = 0;
 
 					curses_out_char(c, reg[ry], cor);
 					// -----------------------------
@@ -633,9 +643,13 @@ loop:
 	goto loop;
 
 fim:
-	//openGL_destroy_window();
-	getchar();   
-	//curses_destroy_window();
+	openGL_destroy_window();
+	//getchar();   
+	curses_destroy_window();
+	elapsed = clock() - clock_init;
+	time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
+	printf("Time elapsed: %lf\n", time_elapsed);
+
 	return 0;
 }
 
@@ -645,7 +659,7 @@ void le_arquivo(void){
 	int i, j;
 	int processando = 0; // Flag para varreo o arquivo CPURAM.mif e tirar o cabecalho
 
-	if ( (stream = fopen("Nave11-fast.mif","r")) == NULL)  // Abre o arquivo para leitura
+	if ( (stream = fopen("Nave11-delay.mif","r")) == NULL)  // Abre o arquivo para leitura
 	{
 		printf("[Simple Simulator] Nao conseguiu abrir o arquivo!\n");
 		exit(1);
@@ -656,7 +670,7 @@ void le_arquivo(void){
 
 	while (fscanf(stream,"%s", linha)!=EOF)   // Le linha por linha ate' o final do arquivo: eof = end of file !!
 	{
-		char letra[2] = "00";
+		char letra[2] = "0";
 
 		if (!processando) {
 			i = 0;

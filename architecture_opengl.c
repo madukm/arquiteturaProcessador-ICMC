@@ -82,13 +82,13 @@ void openGL_destroy_window()
 
 void openGL_update()
 {
-	static clock_t lastUpdate = 0;
-	clock_t elapsed = clock() - lastUpdate;
+	//static clock_t lastUpdate = 0;
+	//clock_t elapsed = clock() - lastUpdate;
 
-	double time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
-	if(time_elapsed>0.1)
-	{
-		lastUpdate = clock();
+	//double time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
+	//if(time_elapsed>0.1)
+	//{
+		//lastUpdate = clock();
 		// Esta funcao atualiza o desenho na tela e checa se a janela foi fechada
 
 		if(!glfwWindowShouldClose(window))
@@ -113,7 +113,7 @@ void openGL_update()
 			glfwTerminate();
 			exit(0);
 		}
-	}
+	//}
 }
 
 void openGL_draw()
@@ -812,4 +812,3 @@ void openGL_draw_dot_paths(float x, float y, char selected)
 	}
 	glEnd();
 }
-

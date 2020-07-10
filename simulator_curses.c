@@ -5,7 +5,6 @@
 //---------------------------------------------------
 #include "simulator_curses.h"
 #include "utils.h"
-#include <time.h>
 
 //Curses colors
 #define WIN_COLOR_BLACK 16
@@ -137,18 +136,18 @@ void curses_setup()
 	init_color(SIM_COLOR_BRANCO, 1000, 1000, 1000);
 	init_color(SIM_COLOR_MARROM, 360, 200, 200);
 	init_color(SIM_COLOR_VERDE, 0, 1000, 0);
-	init_color(SIM_COLOR_OLIVA, 1000, 1000, 1000);
-	init_color(SIM_COLOR_AZUL_MARINHO, 1000, 1000, 1000);
-	init_color(SIM_COLOR_ROXO, 1000, 1000, 1000);
-	init_color(SIM_COLOR_TEAL, 1000, 1000, 1000);
-	init_color(SIM_COLOR_PRATA, 1000, 1000, 1000);
-	init_color(SIM_COLOR_CINZA, 1000, 1000, 1000);
+	init_color(SIM_COLOR_OLIVA, 400, 560, 140);
+	init_color(SIM_COLOR_AZUL_MARINHO, 100, 40, 560);
+	init_color(SIM_COLOR_ROXO, 1000, 0, 1000);
+	init_color(SIM_COLOR_TEAL, 0, 500, 500);
+	init_color(SIM_COLOR_PRATA, 800, 800, 800);
+	init_color(SIM_COLOR_CINZA, 500, 500, 500);
 	init_color(SIM_COLOR_VERMELHO, 1000, 0, 0);
-	init_color(SIM_COLOR_LIMA, 1000, 1000, 1000);
+	init_color(SIM_COLOR_LIMA, 500, 1000, 0);
 	init_color(SIM_COLOR_AMARELO, 1000, 1000, 0);
 	init_color(SIM_COLOR_AZUL, 0, 0, 1000);
-	init_color(SIM_COLOR_ROSA, 1000, 1000, 1000);
-	init_color(SIM_COLOR_AQUA, 1000, 1000, 1000);
+	init_color(SIM_COLOR_ROSA, 1000, 800, 850);
+	init_color(SIM_COLOR_AQUA, 0, 1000, 1000);
 	init_color(SIM_COLOR_PRETO, 0, 0, 0);
 
 	// Cores dos caracteres do simulador
@@ -191,17 +190,10 @@ void curses_setup()
 
 void curses_update(estado_da_maquina_curses estado)
 {
-	static clock_t lastUpdate = 0;
-	clock_t elapsed = clock() - lastUpdate;
 
-	double time_elapsed = ((double)elapsed)/CLOCKS_PER_SEC;
-	if(time_elapsed>0.01)
-	{
-		lastUpdate = clock();
 		curses_draw_top_bar_window(estado);
 		curses_draw_code_window(estado);
 		wrefresh(codeWindow);
-	}
 }
 
 void curses_init_top_bar_window() 
@@ -306,13 +298,10 @@ void curses_out_char(char c, int pos, int cor)
 	int posX = pos%WINDOW_WIDTH;
 	int posY = pos/WINDOW_WIDTH+1;
 
-	//wattr_on(outWindow, COLOR_PAIR(cor), NULL);
-	//mvwprintw(outWindow, posY, posX, "%c", c);
-	//wattr_off(outWindow, COLOR_PAIR(cor), NULL);
-
-	wattr_on(outWindow, COLOR_PAIR(0), NULL);
+	wattr_on(outWindow, COLOR_PAIR(cor), NULL);
 	mvwprintw(outWindow, posY, posX, "%c", c);
-	wattr_off(outWindow, COLOR_PAIR(0), NULL);
+	wattr_off(outWindow, COLOR_PAIR(cor), NULL);
+
 	wrefresh(outWindow);
 }
 
